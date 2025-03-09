@@ -1,1 +1,33 @@
+name: Build & Push Docker Image (Frontend)
 
+# Déclencheur manuel
+on:
+  workflow_dispatch:
+
+jobs:
+  docker_build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1) Récupération du code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2) Login à Docker Hub avec les secrets GitHub
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      # 3) Build de l'image Docker avec npm install intégré
+      - name: Build Docker image
+        run: |
+          docker build \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/mon-front:latest \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/mon-front:${{ github.sha }} \
+            --build-arg VITE_API_URL=rg.fr-par.scw.cloud/namespace-lucas-madjinda/mon-back \
+            ./front
+
+      # 4) Push de l'image Docker (latest + SHA)
+      - name: Push Docker image
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/mon-front:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/mon-front:${{ github.sha }}
