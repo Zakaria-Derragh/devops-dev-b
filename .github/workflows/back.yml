@@ -21,12 +21,12 @@ jobs:
       - name: Build Docker image
         run: |
           docker build \
-            -t ${{ secrets.DOCKER_HOST }}/namespace-lucas-madjinda/mon-back:latest \
-            -t ${{ secrets.DOCKER_HOST }}/namespace-lucas-madjinda/mon-back:${{ github.sha }} \
+            -t ${{ secrets.DOCKER_HOST }}/namespace-test-test/back:latest \
+            -t ${{ secrets.DOCKER_HOST }}/namespace-test-test/back:${{ github.sha }} \
             ./back
 
       # 4) Push de l'image Docker (latest + commit SHA)
       - name: Push Docker image
         run: |
-          docker push ${{ secrets.DOCKER_HOST }}/namespace-lucas-madjinda/mon-back:latest
-          docker push ${{ secrets.DOCKER_HOST }}/namespace-lucas-madjinda/mon-back:${{ github.sha }}
+          docker push ${{ secrets.DOCKER_HOST }}/namespace-test-test/back:latest
+          docker push ${{ secrets.DOCKER_HOST }}/namespace-test-tes/back:${{ github.sha }}
