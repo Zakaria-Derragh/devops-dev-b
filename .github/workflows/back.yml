@@ -1,1 +1,32 @@
+name: Build & Push Docker Image
 
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  docker_build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1) Récupération du code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2) Login à Scaleway Registry (utilise DOCKER_HOST et le token)
+      - name: Login to Scaleway Registry
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login ${{ secrets.DOCKER_HOST }} -u nologin --password-stdin
+
+      # 3) Build de l'image Docker
+      - name: Build Docker image
+        run: |
+          docker build \
+            -t ${{ secrets.DOCKER_HOST }}/namespace-lucas-madjinda/mon-back:latest \
+            -t ${{ secrets.DOCKER_HOST }}/namespace-lucas-madjinda/mon-back:${{ github.sha }} \
+            ./back
+
+      # 4) Push de l'image Docker (latest + commit SHA)
+      - name: Push Docker image
+        run: |
+          docker push ${{ secrets.DOCKER_HOST }}/namespace-lucas-madjinda/mon-back:latest
+          docker push ${{ secrets.DOCKER_HOST }}/namespace-lucas-madjinda/mon-back:${{ github.sha }}
