@@ -23,7 +23,7 @@ jobs:
           docker build \
             -t ${{ secrets.DOCKERHUB_USERNAME }}/mon-front:latest \
             -t ${{ secrets.DOCKERHUB_USERNAME }}/mon-front:${{ github.sha }} \
-            --build-arg VITE_API_URL=rg.fr-par.scw.cloud/namespace-lucas-madjinda/mon-back \
+            --build-arg VITE_API_URL=rg.fr-par.scw.cloud/namespace-test-test/back \
             ./front
 
       # 4) Push de l'image Docker (latest + SHA)
